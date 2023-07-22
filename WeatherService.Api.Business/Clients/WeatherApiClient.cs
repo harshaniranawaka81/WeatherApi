@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +30,8 @@ namespace WeatherService.Api.Business.Clients
 
             var apiKey = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.APIKEY}"];
 
-            httpClient.DefaultRequestHeaders.Add("key", apiKey);
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", apiKey);
 
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
