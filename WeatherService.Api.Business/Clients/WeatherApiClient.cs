@@ -31,7 +31,7 @@ namespace WeatherService.Api.Business.Clients
             var apiKey = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.APIKEY}"];
 
             httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", apiKey);
+                new AuthenticationHeaderValue("key", apiKey);
 
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
