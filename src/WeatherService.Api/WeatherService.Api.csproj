@@ -19,12 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="IO.Swagger">
-      <HintPath>..\..\..\csharp-main\bin\IO.Swagger.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <TransformOnBuild>true</TransformOnBuild>
     </Content>

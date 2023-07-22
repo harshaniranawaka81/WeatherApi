@@ -22,7 +22,6 @@ builder.Services.ConfigureCors();
 //Configure all custom services
 builder.Services.ConfigureServices();
 
-//Add http client
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

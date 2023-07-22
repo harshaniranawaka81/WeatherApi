@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WeatherService.Api.Business.Services;
 
 namespace WeatherService.Api.Controllers
@@ -27,12 +28,17 @@ namespace WeatherService.Api.Controllers
         {
             var result = await weatherApiService.GetRealTimeWeatherAsync(city);
 
-            if (result == null)
+            if (result.Key == HttpStatusCode.NotFound)
             {
-                return NotFound();
+                return NotFound(result.Value);
             }
 
-            return Ok(result);
+            if (result.Key == HttpStatusCode.BadRequest)
+            {
+                return BadRequest(result.Value);
+            }
+
+            return Ok(result.Value);
         }
 
         [HttpGet("{city}")]
@@ -44,9 +50,14 @@ namespace WeatherService.Api.Controllers
         {
             var result = await weatherApiService.GetRealTimeWeatherAsync(city);
 
-            if (result == null)
+            if (result.Key == HttpStatusCode.NotFound)
             {
-                return NotFound();
+                return NotFound(result.Value);
+            }
+
+            if (result.Key == HttpStatusCode.BadRequest)
+            {
+                return BadRequest(result.Value);
             }
 
             return Ok(result);

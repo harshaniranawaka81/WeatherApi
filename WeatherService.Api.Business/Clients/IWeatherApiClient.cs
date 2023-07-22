@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace WeatherService.Api.Business.Clients
 {
     public interface IWeatherApiClient
     {
-        Task<HttpResponseMessage> GetAsync(string url);
+        Task<KeyValuePair<HttpStatusCode, string>> GetAsync(string url);
     }
 
 }

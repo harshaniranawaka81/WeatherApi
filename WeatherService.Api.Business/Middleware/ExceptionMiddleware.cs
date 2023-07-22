@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using WeatherService.Api.Business.Exceptions;
+using WeatherService.Api.Business.DTO;
 
 namespace WeatherService.Api.Business.Middleware
 {
@@ -43,8 +43,8 @@ namespace WeatherService.Api.Business.Middleware
 
             var errorResponse = new ErrorDetails
             {
-                StatusCode = context.Response.StatusCode,
-                ErrorMessage = exception.Message
+                Code = context.Response.StatusCode,
+                Message = exception.Message
             };
 
             var result = JsonSerializer.Serialize(errorResponse);

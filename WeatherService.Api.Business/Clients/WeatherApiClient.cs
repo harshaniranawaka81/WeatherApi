@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace WeatherService.Api.Business.Clients
 {
@@ -22,7 +23,7 @@ namespace WeatherService.Api.Business.Clients
             _config = config;
         }
 
-        public async Task<HttpResponseMessage> GetAsync(string url)
+        public async Task<KeyValuePair<HttpStatusCode, string>> GetAsync(string url)
         {
             var httpClient = _httpClientFactory.CreateClient();
 
@@ -32,7 +33,9 @@ namespace WeatherService.Api.Business.Clients
 
             var httpResponseMessage = await httpClient.GetAsync(url);
 
-            return httpResponseMessage;
+            var content = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            return new KeyValuePair<HttpStatusCode, string>(httpResponseMessage.StatusCode, content);
         }
 
     }

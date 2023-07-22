@@ -5,11 +5,11 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WeatherService.Api.Business.Exceptions
+namespace WeatherService.Api.Business.DTO
 {
     public class ErrorDetails : IErrorDetails
     {
-        public int StatusCode { get; set; }
-        public string ErrorMessage { get; set; }
+        public int Code { get; set; }
+        public string Message { get; set; }
     }
 }

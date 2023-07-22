@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using IO.Swagger.Api;
@@ -13,6 +14,6 @@ namespace WeatherService.Api.Business.Services
 {
     public interface IWeatherApiService
     {
-        Task<HttpResponseMessage> GetRealTimeWeatherAsync(string city);
+        Task<KeyValuePair<HttpStatusCode, string>> GetRealTimeWeatherAsync(string city);
     }
 }

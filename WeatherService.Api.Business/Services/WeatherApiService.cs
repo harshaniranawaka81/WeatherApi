@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using IO.Swagger.Api;
 using IO.Swagger.Client;
 using IO.Swagger.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using WeatherService.Api.Business.Clients;
 using WeatherService.Api.Business.Constants;
+using WeatherService.Api.Business.DTO;
 
 namespace WeatherService.Api.Business.Services
 {
@@ -28,40 +35,49 @@ namespace WeatherService.Api.Business.Services
             _weatherApiClient = weatherApiClient;
         }
 
-        //public virtual async Task<InlineResponse200> GetRealTimeWeatherAsync(string city)
-        //{
-        //    var apiKey = config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.APIKEY}"];
-
-        //    if (string.IsNullOrEmpty(apiKey))
-        //    {
-        //        const string message = $"{Constants.Constants.WEATHER_API_KEY} has not set!";
-        //        throw new ArgumentNullException(message);
-        //        logger.LogError(message);
-        //    }
-
-        //    Configuration.Default.ApiKey.Add("key", apiKey);
-        //    var apiInstance = new APIsApi();
-        //    var result = await apiInstance.RealtimeWeatherAsync(city);
-        //    return result;
-        //}
-
-        public virtual async Task<HttpResponseMessage> GetRealTimeWeatherAsync(string city)
+        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetRealTimeWeatherAsync(string city)
         {
-            var url = GetUrl(Constants.Constants.REALTIME_WEATHER_ENDPOINT);
-            var response = await _weatherApiClient.GetAsync(url);
+            ValidateInputs(city, Constants.Constants.REALTIME_WEATHER_ENDPOINT, out string? url);
 
-            return response;
+            url = $"{url}?q={city}";
+
+            var result = await _weatherApiClient.GetAsync(url);
+
+            if(result.Key == HttpStatusCode.OK)
+            {
+                dynamic json = JObject.Parse(result.Value);
+                var realtimeWeatherObj = new RealtimeWeather()
+                {
+                    City = json.location.name,
+                    Region = json.location.region,
+                    Country = json.location.country,
+                    LocalTime = json.location.localtime,
+                    Temperature = json.current.temp_c,
+                };
+                return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));
+            }
+
+            return result;
         }
 
-        private string GetUrl(string type)
+        private void ValidateInputs(string city, string type,out string? url)
         {
-            var baseUrl = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.BASE_URL}"];
+            string? message;
 
-            var message = string.Empty;
+            if (string.IsNullOrEmpty(city))
+            {
+                message = "Parameter city has not been passed!";
+                _logger.LogError(message);
+                throw new ValidationException(message);
+            }
+
+            var baseUrl = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.BASE_URL}"];
 
             if (string.IsNullOrEmpty(baseUrl))
             {
                 message = "Base Url has not been set in the configuration!";
+                _logger.LogError(message);
+                throw new ValidationException(message);
             }
 
             var endpoint = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{type}"];
@@ -69,15 +85,11 @@ namespace WeatherService.Api.Business.Services
             if (string.IsNullOrEmpty(endpoint))
             {
                 message = $"{type} has not been set in the configuration!";
-            }
-
-            if (!string.IsNullOrEmpty(message))
-            {
                 _logger.LogError(message);
-                throw new ArgumentNullException(message);
+                throw new ValidationException(message);
             }
 
-            return $"{baseUrl}{endpoint}";
+            url = $"{baseUrl}{endpoint}";
         }
     }
 }
