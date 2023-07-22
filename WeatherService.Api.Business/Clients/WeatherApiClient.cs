@@ -22,18 +22,15 @@ namespace WeatherService.Api.Business.Clients
             _config = config;
         }
 
-        public async Task<HttpResponseMessage> SendAsync(string url)
+        public async Task<HttpResponseMessage> GetAsync(string url)
         {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, url);
-
             var httpClient = _httpClientFactory.CreateClient();
 
             var apiKey = _config[$"{Constants.Constants.WEATHERAPI_SECTION}:{Constants.Constants.APIKEY}"];
 
-            httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("key", apiKey);
+            httpClient.DefaultRequestHeaders.Add("key", apiKey);
 
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            var httpResponseMessage = await httpClient.GetAsync(url);
 
             return httpResponseMessage;
         }

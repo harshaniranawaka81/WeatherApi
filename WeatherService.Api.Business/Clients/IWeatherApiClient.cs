@@ -10,7 +10,7 @@ namespace WeatherService.Api.Business.Clients
 {
     public interface IWeatherApiClient
     {
-        Task<HttpResponseMessage> SendAsync(string url);
+        Task<HttpResponseMessage> GetAsync(string url);
     }
 
 }

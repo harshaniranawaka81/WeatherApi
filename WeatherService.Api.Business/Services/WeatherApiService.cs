@@ -48,7 +48,7 @@ namespace WeatherService.Api.Business.Services
         public virtual async Task<HttpResponseMessage> GetRealTimeWeatherAsync(string city)
         {
             var url = GetUrl(Constants.Constants.REALTIME_WEATHER_ENDPOINT);
-            var response = await _weatherApiClient.SendAsync(url);
+            var response = await _weatherApiClient.GetAsync(url);
 
             return response;
         }
