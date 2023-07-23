@@ -7,12 +7,12 @@ namespace WeatherService.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
-    public partial class RealtimeWeatherController : ControllerBase
+    public partial class WeatherController : ControllerBase
     {
-        private readonly ILogger<RealtimeWeatherController> _logger;
+        private readonly ILogger<WeatherController> _logger;
         private readonly IWeatherApiService _weatherApiService;
 
-        public RealtimeWeatherController(ILogger<RealtimeWeatherController> logger, IWeatherApiService weatherApiService)
+        public WeatherController(ILogger<WeatherController> logger, IWeatherApiService weatherApiService)
         {
             _logger = logger;
             _weatherApiService = weatherApiService;
@@ -25,13 +25,17 @@ namespace WeatherService.Api.Controllers
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetRealTimeWeather(string city)
         {
-            var result = await _weatherApiService.GetRealTimeWeatherAsync(city);
+            var result = await _weatherApiService.GetWeatherInformationAsync(city);
+
+            if (result.Key != HttpStatusCode.OK)
+            {
+                _logger.LogError(message: result.Value);
+            }
 
             return result.Key switch
             {
-                HttpStatusCode.NotFound => NotFound(result.Value),
-                HttpStatusCode.BadRequest => BadRequest(result.Value),
-                _ => Ok(result.Value)
+                HttpStatusCode.OK => Ok(result.Value),
+                _ => BadRequest(result.Value)
             };
         }
     }

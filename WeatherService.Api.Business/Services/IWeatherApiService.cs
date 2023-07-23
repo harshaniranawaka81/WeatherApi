@@ -12,5 +12,6 @@ namespace WeatherService.Api.Business.Services
     public interface IWeatherApiService
     {
         Task<KeyValuePair<HttpStatusCode, string>> GetRealTimeWeatherAsync(string city);
+        Task<KeyValuePair<HttpStatusCode, string>> GetWeatherInformationAsync(string city);
     }
 }

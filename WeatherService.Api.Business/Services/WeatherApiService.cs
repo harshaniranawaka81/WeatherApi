@@ -31,6 +31,13 @@ namespace WeatherService.Api.Business.Services
 
             var result = await _weatherApiClient.GetAsync(url);
 
+            return result;
+        }
+
+        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetWeatherInformationAsync(string city)
+        {
+            var result = await GetRealTimeWeatherAsync(city);
+
             if (result.Key != HttpStatusCode.OK) return result;
 
             dynamic json = JObject.Parse(result.Value);
