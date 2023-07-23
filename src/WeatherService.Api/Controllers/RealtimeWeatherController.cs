@@ -35,22 +35,5 @@ namespace WeatherService.Api.Controllers
                 _ => Ok(result.Value)
             };
         }
-
-        [HttpGet("{city}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [MapToApiVersion("2.0")]
-        public async Task<IActionResult> GetRealTimeWeatherWithAstronomy(string city)
-        {
-            var result = await weatherApiService.GetRealTimeWeatherAsync(city);
-
-            return result.Key switch
-            {
-                HttpStatusCode.NotFound => NotFound(result.Value),
-                HttpStatusCode.BadRequest => BadRequest(result.Value),
-                _ => Ok(result.Value)
-            };
-        }
     }
 }
