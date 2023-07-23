@@ -12,5 +12,6 @@ namespace WeatherService.Api.Business.Constants
         public const string BASE_URL = "BaseUrl";
         public const string APIKEY = "ApiKey";
         public const string REALTIME_WEATHER_ENDPOINT = "RealtimeWeatherEndpoint";
+        public const string ASTRONOMY_ENDPOINT = "AstronomyEndpoint";
     }
 }

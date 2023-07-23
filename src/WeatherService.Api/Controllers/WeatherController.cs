@@ -1,21 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using WeatherService.Api.Business.Factories;
 using WeatherService.Api.Business.Services;
+using WeatherService.Api.Business.Strategies;
 
 namespace WeatherService.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public partial class WeatherController : ControllerBase
     {
         private readonly ILogger<WeatherController> _logger;
-        private readonly IWeatherApiService _weatherApiService;
+        private readonly IWeatherStrategyFactory _weatherStrategyFactory;
 
-        public WeatherController(ILogger<WeatherController> logger, IWeatherApiService weatherApiService)
+        public WeatherController(ILogger<WeatherController> logger, IWeatherStrategyFactory weatherStrategyFactory)
         {
             _logger = logger;
-            _weatherApiService = weatherApiService;
+            _weatherStrategyFactory = weatherStrategyFactory;
         }
 
         [HttpGet("{city}")]
@@ -25,7 +28,32 @@ namespace WeatherService.Api.Controllers
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetRealTimeWeather(string city)
         {
-            var result = await _weatherApiService.GetWeatherInformationAsync(city);
+            var weatherStrategy = _weatherStrategyFactory.Create(1);
+
+            var result = await weatherStrategy.GetWeatherInformationAsync(city);
+
+            if (result.Key != HttpStatusCode.OK)
+            {
+                _logger.LogError(message: result.Value);
+            }
+
+            return result.Key switch
+            {
+                HttpStatusCode.OK => Ok(result.Value),
+                _ => BadRequest(result.Value)
+            };
+        }
+
+        [HttpGet("{city}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [MapToApiVersion("2.0")]
+        public async Task<IActionResult> GetRealTimeWeatherWithAstronomy(string city)
+        {
+            var weatherStrategy = _weatherStrategyFactory.Create(2);
+
+            var result = await weatherStrategy.GetWeatherInformationAsync(city);
 
             if (result.Key != HttpStatusCode.OK)
             {

@@ -33,25 +33,15 @@ namespace WeatherService.Api.Business.Services
 
             return result;
         }
-
-        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetWeatherInformationAsync(string city)
+        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetAstonomyAsync(string city)
         {
-            var result = await GetRealTimeWeatherAsync(city);
+            ValidateInputs(city, Constants.Constants.ASTRONOMY_ENDPOINT, out string? url);
 
-            if (result.Key != HttpStatusCode.OK) return result;
+            url = $"{url}?q={city}";
 
-            dynamic json = JObject.Parse(result.Value);
-            var realtimeWeatherObj = new RealtimeWeather()
-            {
-                City = json.location.name,
-                Region = json.location.region,
-                Country = json.location.country,
-                LocalTime = json.location.localtime,
-                Temperature = json.current.temp_c,
-            };
+            var result = await _weatherApiClient.GetAsync(url);
 
-            return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));
-
+            return result;
         }
 
         private void ValidateInputs(string city, string type,out string? url)
