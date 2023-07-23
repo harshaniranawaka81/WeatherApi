@@ -26,7 +26,7 @@ namespace WeatherService.Api.Business.Strategies
 
             if (weather.Key != HttpStatusCode.OK) return weather;
 
-            var astronomy = await _weatherApiService.GetRealTimeWeatherAsync(city);
+            var astronomy = await _weatherApiService.GetAstonomyAsync(city);
 
             if (astronomy.Key != HttpStatusCode.OK) return astronomy;
 
@@ -41,8 +41,8 @@ namespace WeatherService.Api.Business.Strategies
                 LocalTime = jsonWeather.location.localtime,
                 Temperature = jsonWeather.current.temp_c,
 
-                Sunrise = jsonAstonomy.current.temp_c,
-                Sunset = jsonAstonomy.current.temp_c,
+                Sunrise = jsonAstonomy.astronomy.astro.sunrise,
+                Sunset = jsonAstonomy.astronomy.astro.sunset,
             };
 
             return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));

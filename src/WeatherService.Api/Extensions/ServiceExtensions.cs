@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WeatherService.Api.Business.Clients;
+using WeatherService.Api.Business.Factories;
 using WeatherService.Api.Business.Services;
+using WeatherService.Api.Business.Strategies;
 
 namespace WeatherService.Api.Extensions
 {
@@ -45,6 +47,8 @@ namespace WeatherService.Api.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<IWeatherApiClient, WeatherApiClient>();
+            services.AddScoped<IWeatherStrategyFactory, WeatherStrategyFactory>();
+            services.AddScoped<IBaseWeatherStrategy, BaseWeatherStrategy>();
             services.AddScoped<IWeatherApiService, WeatherApiService>();
         }
         public static void ConfigureLogging(this WebApplication app)

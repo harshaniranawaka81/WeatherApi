@@ -37,7 +37,9 @@ namespace WeatherService.Api.Business.Services
         {
             ValidateInputs(city, Constants.Constants.ASTRONOMY_ENDPOINT, out string? url);
 
-            url = $"{url}?q={city}";
+            var today = DateTime.Now.ToString("yyyy-MM-dd");
+
+            url = $"{url}?q={city}&dt={today}";
 
             var result = await _weatherApiClient.GetAsync(url);
 
