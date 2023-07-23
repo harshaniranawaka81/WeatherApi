@@ -7,7 +7,6 @@ namespace WeatherService.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
-    [ApiVersion("2.0")]
     public partial class RealtimeWeatherController : ControllerBase
     {
         private readonly ILogger<RealtimeWeatherController> logger;
