@@ -26,9 +26,6 @@ namespace WeatherService.Api.Business.Factories
                 case 1:
                     weatherStrategy = new BaseWeatherStrategy(_weatherApiService);
                     break;
-                case 2:
-                    weatherStrategy = new WeatherStrategyWithAstronomy(_weatherApiService);
-                    break;
                 default:
                     weatherStrategy = new BaseWeatherStrategy(_weatherApiService);
                     break;

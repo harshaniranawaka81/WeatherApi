@@ -33,16 +33,6 @@ namespace WeatherService.Api.Business.Services
 
             return result;
         }
-        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetAstonomyAsync(string city)
-        {
-            ValidateInputs(city, Constants.Constants.ASTRONOMY_ENDPOINT, out string? url);
-
-            url = $"{url}?q={city}";
-
-            var result = await _weatherApiClient.GetAsync(url);
-
-            return result;
-        }
 
         private void ValidateInputs(string city, string type,out string? url)
         {
