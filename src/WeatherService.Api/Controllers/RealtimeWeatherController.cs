@@ -28,17 +28,12 @@ namespace WeatherService.Api.Controllers
         {
             var result = await weatherApiService.GetRealTimeWeatherAsync(city);
 
-            if (result.Key == HttpStatusCode.NotFound)
+            return result.Key switch
             {
-                return NotFound(result.Value);
-            }
-
-            if (result.Key == HttpStatusCode.BadRequest)
-            {
-                return BadRequest(result.Value);
-            }
-
-            return Ok(result.Value);
+                HttpStatusCode.NotFound => NotFound(result.Value),
+                HttpStatusCode.BadRequest => BadRequest(result.Value),
+                _ => Ok(result.Value)
+            };
         }
 
         [HttpGet("{city}")]
@@ -50,17 +45,12 @@ namespace WeatherService.Api.Controllers
         {
             var result = await weatherApiService.GetRealTimeWeatherAsync(city);
 
-            if (result.Key == HttpStatusCode.NotFound)
+            return result.Key switch
             {
-                return NotFound(result.Value);
-            }
-
-            if (result.Key == HttpStatusCode.BadRequest)
-            {
-                return BadRequest(result.Value);
-            }
-
-            return Ok(result);
+                HttpStatusCode.NotFound => NotFound(result.Value),
+                HttpStatusCode.BadRequest => BadRequest(result.Value),
+                _ => Ok(result.Value)
+            };
         }
     }
 }

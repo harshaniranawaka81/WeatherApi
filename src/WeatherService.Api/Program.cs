@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-//Add Api versioning
+//Configure Api versioning
 builder.Services.ConfigureApiVersioning();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,13 +22,13 @@ builder.Services.ConfigureCors();
 //Configure all custom services
 builder.Services.ConfigureServices();
 
+//Add HttpClient to access Weather Api
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 //Configure logging
-var loggerFactory = app.Services.GetService<ILoggerFactory>();
-loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
+app.ConfigureLogging();
 
 //Configure all custom middleware
 app.UseExceptionMiddleware();

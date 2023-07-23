@@ -10,6 +10,6 @@ namespace WeatherService.Api.Business.DTO
     public class ErrorDetails : IErrorDetails
     {
         public int Code { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace WeatherService.Api.Extensions
 {
     public static class ServiceExtensions
     {
+       
         public static void ConfigureApiVersioning(this IServiceCollection services)
         {
             services.AddApiVersioning(o =>
@@ -46,6 +47,12 @@ namespace WeatherService.Api.Extensions
             services.AddScoped<IWeatherApiClient, WeatherApiClient>();
             services.AddScoped<IWeatherApiService, WeatherApiService>();
         }
-
+        public static void ConfigureLogging(this WebApplication app)
+        {
+            var loggerFactory = app.Services.GetService<ILoggerFactory>();
+            var logFilePath = app.Configuration["Logging:LogFilePath"];
+            if (!string.IsNullOrEmpty(logFilePath))
+                loggerFactory.AddFile(logFilePath);
+        }
     }
 }

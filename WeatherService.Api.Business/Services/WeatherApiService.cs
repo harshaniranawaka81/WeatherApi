@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Web.Helpers;
-using IO.Swagger.Api;
-using IO.Swagger.Client;
-using IO.Swagger.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -43,21 +31,20 @@ namespace WeatherService.Api.Business.Services
 
             var result = await _weatherApiClient.GetAsync(url);
 
-            if(result.Key == HttpStatusCode.OK)
-            {
-                dynamic json = JObject.Parse(result.Value);
-                var realtimeWeatherObj = new RealtimeWeather()
-                {
-                    City = json.location.name,
-                    Region = json.location.region,
-                    Country = json.location.country,
-                    LocalTime = json.location.localtime,
-                    Temperature = json.current.temp_c,
-                };
-                return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));
-            }
+            if (result.Key != HttpStatusCode.OK) return result;
 
-            return result;
+            dynamic json = JObject.Parse(result.Value);
+            var realtimeWeatherObj = new RealtimeWeather()
+            {
+                City = json.location.name,
+                Region = json.location.region,
+                Country = json.location.country,
+                LocalTime = json.location.localtime,
+                Temperature = json.current.temp_c,
+            };
+
+            return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));
+
         }
 
         private void ValidateInputs(string city, string type,out string? url)

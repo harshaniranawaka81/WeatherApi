@@ -14,12 +14,10 @@ namespace WeatherService.Api.Business.Clients
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
-        private readonly ILogger<WeatherApiClient> _logger;
 
-        public WeatherApiClient(IHttpClientFactory httpClientFactory, ILogger<WeatherApiClient> logger, IConfiguration config)
+        public WeatherApiClient(IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _httpClientFactory = httpClientFactory;
-            _logger = logger;
             _config = config;
         }
 
