@@ -9,13 +9,13 @@ namespace WeatherService.Api.Controllers
     [ApiVersion("1.0")]
     public partial class RealtimeWeatherController : ControllerBase
     {
-        private readonly ILogger<RealtimeWeatherController> logger;
-        private readonly IWeatherApiService weatherApiService;
+        private readonly ILogger<RealtimeWeatherController> _logger;
+        private readonly IWeatherApiService _weatherApiService;
 
         public RealtimeWeatherController(ILogger<RealtimeWeatherController> logger, IWeatherApiService weatherApiService)
         {
-            this.logger = logger;
-            this.weatherApiService = weatherApiService;
+            _logger = logger;
+            _weatherApiService = weatherApiService;
         }
 
         [HttpGet("{city}")]
@@ -25,7 +25,7 @@ namespace WeatherService.Api.Controllers
         [MapToApiVersion("1.0")]
         public async Task<IActionResult> GetRealTimeWeather(string city)
         {
-            var result = await weatherApiService.GetRealTimeWeatherAsync(city);
+            var result = await _weatherApiService.GetRealTimeWeatherAsync(city);
 
             return result.Key switch
             {
