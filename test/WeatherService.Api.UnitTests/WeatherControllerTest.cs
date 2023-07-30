@@ -64,7 +64,7 @@ namespace WeatherService.Api.UnitTests
 
         }
 
-        private string PrepareOkJsonObject()
+        private string PrepareOkJsonObject_GetRealTimeWeather()
         {
             const string json = "{\r\n  \"location\": {\r\n    \"name\": \"London\",\r\n    \"region\": \"City of London, Greater London\",\r\n    \"country\": \"United Kingdom\",\r\n    \"lat\": 51.52,\r\n    \"lon\": -0.11,\r\n    \"tz_id\": \"Europe/London\",\r\n    \"localtime_epoch\": 1690135710,\r\n    \"localtime\": \"2023-07-23 19:08\"\r\n  },\r\n  \"current\": {\r\n    \"temp_c\": 22,\r\n    \"temp_f\": 71.6,\r\n    \"condition\": {},\r\n    \"uv\": 6\r\n  }\r\n}";
           
@@ -73,7 +73,7 @@ namespace WeatherService.Api.UnitTests
             return token.ToString();
         }
 
-        private string PrepareOkJsonObjectForAstronomy()
+        private string PrepareOkJsonObject_GetRealTimeWeatherWithAstronomy()
         {
             const string json = "{\r\n  \"location\": {\r\n    \"name\": \"London\",\r\n    \"region\": \"City of London, Greater London\",\r\n    \"country\": \"United Kingdom\",\r\n    \"lat\": 51.52,\r\n    \"lon\": -0.11,\r\n    \"tz_id\": \"Europe/London\",\r\n    \"localtime_epoch\": 1690151352,\r\n    \"localtime\": \"2023-07-23 23:29\"\r\n  },\r\n  \"current\": {\r\n    \"temp_c\": 17,\r\n    \"temp_f\": 62.6,\r\n    \"condition\": {},\r\n    \"uv\": 1\r\n  },\r\n  \"astronomy\": {\r\n    \"astro\": {\r\n      \"sunrise\": \"04:47 AM\",\r\n      \"sunset\": \"09:21 PM\",\r\n      \"moonrise\": \"07:57 PM\",\r\n      \"moonset\": \"02:21 AM\",\r\n      \"moon_phase\": \"Waxing Gibbous\",\r\n      \"moon_illumination\": \"92\",\r\n      \"is_moon_up\": 1,\r\n      \"is_sun_up\": 0\r\n    }\r\n  }\r\n}";
 
