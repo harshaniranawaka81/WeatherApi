@@ -24,75 +24,24 @@ using System.Threading;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
+using WeatherService.Api.Business.UnitTests;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace WeatherService.Api.UnitTests
 {
     public class WeatherControllerTest
     {
-        private IConfiguration CreateConfigMock()
-        {
-            var appSettings = new Dictionary<string, string> {
-                {"WeatherApi:BaseUrl", "http://api.weatherapi.com/v1"},
-                {"WeatherApi:ApiKey", "e37c5b71bde441bcbd3192338231807"},
-                {"WeatherApi:RealtimeWeatherEndpoint", "/current.json"},
-                {"WeatherApi:AstronomyEndpoint", "/astronomy.json"},
-            };
-
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(appSettings)
-                .Build();
-
-            return configuration;
-        }
-
-        private HttpClient CreateHttpClientMock(HttpResponseMessage httpResponseMessage)
-        {
-            var httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-
-            httpMessageHandlerMock
-                .Protected() 
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(httpResponseMessage);
-
-
-            // create the HttpClient
-            return new HttpClient(httpMessageHandlerMock.Object);
-
-        }
-
-        private string PrepareOkJsonObject_GetRealTimeWeather()
-        {
-            const string json = "{\r\n  \"location\": {\r\n    \"name\": \"London\",\r\n    \"region\": \"City of London, Greater London\",\r\n    \"country\": \"United Kingdom\",\r\n    \"lat\": 51.52,\r\n    \"lon\": -0.11,\r\n    \"tz_id\": \"Europe/London\",\r\n    \"localtime_epoch\": 1690135710,\r\n    \"localtime\": \"2023-07-23 19:08\"\r\n  },\r\n  \"current\": {\r\n    \"temp_c\": 22,\r\n    \"temp_f\": 71.6,\r\n    \"condition\": {},\r\n    \"uv\": 6\r\n  }\r\n}";
-          
-            var token = JToken.Parse(json);
-
-            return token.ToString();
-        }
-
-        private string PrepareOkJsonObject_GetRealTimeWeatherWithAstronomy()
-        {
-            const string json = "{\r\n  \"location\": {\r\n    \"name\": \"London\",\r\n    \"region\": \"City of London, Greater London\",\r\n    \"country\": \"United Kingdom\",\r\n    \"lat\": 51.52,\r\n    \"lon\": -0.11,\r\n    \"tz_id\": \"Europe/London\",\r\n    \"localtime_epoch\": 1690151352,\r\n    \"localtime\": \"2023-07-23 23:29\"\r\n  },\r\n  \"current\": {\r\n    \"temp_c\": 17,\r\n    \"temp_f\": 62.6,\r\n    \"condition\": {},\r\n    \"uv\": 1\r\n  },\r\n  \"astronomy\": {\r\n    \"astro\": {\r\n      \"sunrise\": \"04:47 AM\",\r\n      \"sunset\": \"09:21 PM\",\r\n      \"moonrise\": \"07:57 PM\",\r\n      \"moonset\": \"02:21 AM\",\r\n      \"moon_phase\": \"Waxing Gibbous\",\r\n      \"moon_illumination\": \"92\",\r\n      \"is_moon_up\": 1,\r\n      \"is_sun_up\": 0\r\n    }\r\n  }\r\n}";
-
-            var token = JToken.Parse(json);
-
-            return token.ToString();
-        }
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
         [InlineData("unknown-city")]
-        public async Task GetRealTimeWeather_NoInputParam_ThrowsException(string city)
+        public async Task GetRealTimeWeather_InvalidInputParam_ThrowsException(string city)
         {
             //Arrange 
             var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
             var loggerWeatherController = new Mock<ILogger<WeatherController>>();
 
-            var config = CreateConfigMock();
+            var config = TestData.CreateConfigMock();
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
 
@@ -101,7 +50,7 @@ namespace WeatherService.Api.UnitTests
                 StatusCode = HttpStatusCode.BadRequest
             };
 
-            var client = CreateHttpClientMock(httpResponseMessage);
+            var client = TestData.CreateHttpClientMock(httpResponseMessage);
             httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
@@ -111,10 +60,7 @@ namespace WeatherService.Api.UnitTests
 
             var weatherController = new WeatherController(loggerWeatherController.Object, weatherStrategyFactory);
 
-            //Act
-            var result = weatherController.GetRealTimeWeather(city);
-
-            //Assert
+            //Act and Assert
             await Assert.ThrowsAsync<ValidationException>(async () => await weatherController.GetRealTimeWeather(string.Empty));
         }
 
@@ -125,17 +71,17 @@ namespace WeatherService.Api.UnitTests
             var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
             var loggerWeatherController = new Mock<ILogger<WeatherController>>();
 
-            var config = CreateConfigMock();
+            var config = TestData.CreateConfigMock();
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
 
             var httpResponseMessage = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(PrepareOkJsonObject())
+                Content = new StringContent(TestData.PrepareOkJsonObject_GetRealTimeWeather())
             };
 
-            var client = CreateHttpClientMock(httpResponseMessage);
+            var client = TestData.CreateHttpClientMock(httpResponseMessage);
             httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
@@ -155,13 +101,13 @@ namespace WeatherService.Api.UnitTests
         [InlineData("")]
         [InlineData(null)]
         [InlineData("unknown-city")]
-        public async Task GetRealTimeWeatherWithAstronomy_NoInputParam_ThrowsException()
+        public async Task GetRealTimeWeatherWithAstronomy_InvalidInputParam_ThrowsException(string city)
         {
             //Arrange 
             var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
             var loggerWeatherController = new Mock<ILogger<WeatherController>>();
 
-            var config = CreateConfigMock();
+            var config = TestData.CreateConfigMock();
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
 
@@ -170,7 +116,7 @@ namespace WeatherService.Api.UnitTests
                 StatusCode = HttpStatusCode.BadRequest
             };
 
-            var client = CreateHttpClientMock(httpResponseMessage);
+            var client = TestData.CreateHttpClientMock(httpResponseMessage);
             httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
@@ -180,11 +126,8 @@ namespace WeatherService.Api.UnitTests
 
             var weatherController = new WeatherController(loggerWeatherController.Object, weatherStrategyFactory);
 
-            //Act
-            var result = weatherController.GetRealTimeWeatherWithAstronomy(string.Empty);
-
-            //Assert
-            await Assert.ThrowsAsync<ValidationException>(async () => await weatherController.GetRealTimeWeather(string.Empty));
+            //Act and Assert
+            await Assert.ThrowsAsync<ValidationException>(async () => await weatherController.GetRealTimeWeatherWithAstronomy(string.Empty));
         }
 
         [Fact]
@@ -194,17 +137,17 @@ namespace WeatherService.Api.UnitTests
             var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
             var loggerWeatherController = new Mock<ILogger<WeatherController>>();
 
-            var config = CreateConfigMock();
+            var config = TestData.CreateConfigMock();
 
             var httpClientFactory = new Mock<IHttpClientFactory>();
 
             var httpResponseMessage = new HttpResponseMessage
             {
                 StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(PrepareOkJsonObjectForAstronomy())
+                Content = new StringContent(TestData.PrepareOkJsonObject_GetRealTimeWeatherWithAstronomy())
             };
 
-            var client = CreateHttpClientMock(httpResponseMessage);
+            var client = TestData.CreateHttpClientMock(httpResponseMessage);
             httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
 
             var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
