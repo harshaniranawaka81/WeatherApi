@@ -61,6 +61,7 @@ namespace WeatherService.Api.Business.UnitTests
             //Act
             var result = await weatherApiClient.GetAsync(url);
 
+            //Assert
             Assert.Equal(HttpStatusCode.OK, result.Key);
         }
     }
