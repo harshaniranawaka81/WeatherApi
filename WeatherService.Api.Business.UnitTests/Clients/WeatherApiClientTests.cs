@@ -8,7 +8,7 @@ using Xunit;
 using System.ComponentModel.DataAnnotations;
 using WeatherService.Api.Controllers;
 
-namespace WeatherService.Api.Business.UnitTests
+namespace WeatherService.Api.Business.UnitTests.Clients
 {
     public class WeatherApiClientTests
     {
