@@ -82,8 +82,11 @@ namespace WeatherService.Api.UnitTests
             return token.ToString();
         }
 
-        [Fact]
-        public async Task GetRealTimeWeather_NoInputParam_ThrowsException()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("unknown-city")]
+        public async Task GetRealTimeWeather_NoInputParam_ThrowsException(string city)
         {
             //Arrange 
             var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
@@ -109,42 +112,10 @@ namespace WeatherService.Api.UnitTests
             var weatherController = new WeatherController(loggerWeatherController.Object, weatherStrategyFactory);
 
             //Act
-            var result = weatherController.GetRealTimeWeather(string.Empty);
+            var result = weatherController.GetRealTimeWeather(city);
 
             //Assert
             await Assert.ThrowsAsync<ValidationException>(async () => await weatherController.GetRealTimeWeather(string.Empty));
-        }
-
-        [Fact]
-        public async Task GetRealTimeWeather_IncorrectInputParam_ThrowsException()
-        {
-            //Arrange 
-            var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
-            var loggerWeatherController = new Mock<ILogger<WeatherController>>();
-
-            var config = CreateConfigMock();
-
-            var httpClientFactory = new Mock<IHttpClientFactory>();
-
-            var httpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.NotFound
-            };
-
-            var client = CreateHttpClientMock(httpResponseMessage);
-            httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
-
-            var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
-            var weatherApiService = new WeatherApiService(config, loggerWeatherApiService.Object, weatherApiClient.Object);
-            var weatherStrategyFactory = new WeatherStrategyFactory(weatherApiService);
-
-            var weatherController = new WeatherController(loggerWeatherController.Object, weatherStrategyFactory);
-
-            //Act
-            var result = await weatherController.GetRealTimeWeather(city: "unknown-city");
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
@@ -180,7 +151,10 @@ namespace WeatherService.Api.UnitTests
             Assert.IsType<OkObjectResult>(result.Result);
         }
 
-        [Fact]
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("unknown-city")]
         public async Task GetRealTimeWeatherWithAstronomy_NoInputParam_ThrowsException()
         {
             //Arrange 
@@ -211,38 +185,6 @@ namespace WeatherService.Api.UnitTests
 
             //Assert
             await Assert.ThrowsAsync<ValidationException>(async () => await weatherController.GetRealTimeWeather(string.Empty));
-        }
-
-        [Fact]
-        public async Task GetRealTimeWeatherWithAstronomy_IncorrectInputParam_ThrowsException()
-        {
-            //Arrange 
-            var loggerWeatherApiService = new Mock<ILogger<WeatherApiService>>();
-            var loggerWeatherController = new Mock<ILogger<WeatherController>>();
-
-            var config = CreateConfigMock();
-
-            var httpClientFactory = new Mock<IHttpClientFactory>();
-
-            var httpResponseMessage = new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.NotFound
-            };
-
-            var client = CreateHttpClientMock(httpResponseMessage);
-            httpClientFactory.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(client);
-
-            var weatherApiClient = new Mock<WeatherApiClient>(httpClientFactory.Object, config);
-            var weatherApiService = new WeatherApiService(config, loggerWeatherApiService.Object, weatherApiClient.Object);
-            var weatherStrategyFactory = new WeatherStrategyFactory(weatherApiService);
-
-            var weatherController = new WeatherController(loggerWeatherController.Object, weatherStrategyFactory);
-
-            //Act
-            var result = await weatherController.GetRealTimeWeatherWithAstronomy(city: "unknown-city");
-
-            //Assert
-            Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
