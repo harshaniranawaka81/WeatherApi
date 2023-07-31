@@ -62,5 +62,13 @@ namespace WeatherService.Api.Business.UnitTests
 
             return token.ToString();
         }
+        public static string PrepareNoResultJsonObject()
+        {
+            const string json = "{\r\n  \"error\": {\r\n    \"code\": 1006,\r\n    \"message\": \"No matching location found.\"\r\n  }\r\n}";
+
+            var token = JToken.Parse(json);
+
+            return token.ToString();
+        }
     }
 }

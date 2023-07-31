@@ -32,7 +32,7 @@ namespace WeatherService.Api.Controllers
 
             var result = await weatherStrategy.GetWeatherInformationAsync(city);
 
-            if (result.Key != HttpStatusCode.OK)
+            if (result.Key != HttpStatusCode.OK && result.Key != HttpStatusCode.NotFound)
             {
                 _logger.LogError(message: result.Value);
             }
@@ -40,6 +40,7 @@ namespace WeatherService.Api.Controllers
             return result.Key switch
             {
                 HttpStatusCode.OK => Ok(result.Value),
+                HttpStatusCode.NotFound => NotFound(result.Value),
                 _ => BadRequest(result.Value)
             };
         }
@@ -55,7 +56,7 @@ namespace WeatherService.Api.Controllers
 
             var result = await weatherStrategy.GetWeatherInformationAsync(city);
 
-            if (result.Key != HttpStatusCode.OK)
+            if (result.Key != HttpStatusCode.OK && result.Key != HttpStatusCode.NotFound)
             {
                 _logger.LogError(message: result.Value);
             }
@@ -63,6 +64,7 @@ namespace WeatherService.Api.Controllers
             return result.Key switch
             {
                 HttpStatusCode.OK => Ok(result.Value),
+                HttpStatusCode.NotFound => NotFound(result.Value),
                 _ => BadRequest(result.Value)
             };
         }
