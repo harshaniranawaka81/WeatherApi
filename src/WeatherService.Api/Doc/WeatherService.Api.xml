@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WeatherService.Api</name>
+    </assembly>
+    <members>
+        <member name="M:WeatherService.Api.Controllers.WeatherController.GetRealTimeWeather(System.String)">
+             <summary>
+             Gets the real time weather.
+             </summary>
+             <param name="city">The city.</param>
+             <returns></returns>
+             <remarks>
+             Sample request:
+            
+                 Get /api/Weather/{city}?api-version=1
+            
+             </remarks>
+             <returns>IEnumerable of slugs</returns>
+             <response code="200">If a result is found</response>
+             <response code="404">If a result is not found</response>
+             <response code="400">If there is an error</response>
+        </member>
+        <member name="M:WeatherService.Api.Controllers.WeatherController.GetRealTimeWeatherWithAstronomy(System.String)">
+             <summary>
+             Gets the real time weather with astronomy.
+             </summary>
+             <param name="city">The city.</param>
+             <returns></returns>
+             <remarks>
+             Sample request:
+            
+                 Get /api/Weather/{city}?api-version=2
+            
+             </remarks>
+             <returns>IEnumerable of slugs</returns>
+             <response code="200">If a result is found</response>
+             <response code="404">If a result is not found</response>
+             <response code="400">If there is an error</response>
+        </member>
+    </members>
+</doc>

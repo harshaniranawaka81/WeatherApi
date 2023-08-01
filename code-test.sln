@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C9D8CD1A-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherService.Api.Business", "WeatherService.Api.Business\WeatherService.Api.Business.csproj", "{5697621E-A97A-4DF0-9662-E797A0A1F488}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherService.Api.Business.UnitTests", "WeatherService.Api.Business.UnitTests\WeatherService.Api.Business.UnitTests.csproj", "{C6561DF4-694C-4428-8F34-23D6EEACD45A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherService.Api.Business.UnitTests", "WeatherService.Api.Business.UnitTests\WeatherService.Api.Business.UnitTests.csproj", "{C6561DF4-694C-4428-8F34-23D6EEACD45A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
