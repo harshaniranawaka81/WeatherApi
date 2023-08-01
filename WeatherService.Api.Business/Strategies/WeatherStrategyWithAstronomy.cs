@@ -31,7 +31,7 @@ namespace WeatherService.Api.Business.Strategies
             if (astronomy.Key != HttpStatusCode.OK) return astronomy;
 
             dynamic jsonWeather = JObject.Parse(weather.Value);
-            dynamic jsonAstonomy = JObject.Parse(astronomy.Value);
+            dynamic jsonAstronomy = JObject.Parse(astronomy.Value);
 
             var realtimeWeatherObj = new RealtimeWeatherWithAstronomy()
             {
@@ -41,8 +41,8 @@ namespace WeatherService.Api.Business.Strategies
                 LocalTime = jsonWeather.location.localtime,
                 Temperature = jsonWeather.current.temp_c,
 
-                Sunrise = jsonAstonomy.astronomy.astro.sunrise,
-                Sunset = jsonAstonomy.astronomy.astro.sunset,
+                Sunrise = jsonAstronomy.astronomy.astro.sunrise,
+                Sunset = jsonAstronomy.astronomy.astro.sunset,
             };
 
             return new KeyValuePair<HttpStatusCode, string>(HttpStatusCode.OK, JsonConvert.SerializeObject(realtimeWeatherObj));

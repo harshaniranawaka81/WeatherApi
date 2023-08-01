@@ -33,7 +33,7 @@ namespace WeatherService.Api.Business.Services
 
             return result;
         }
-        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetAstonomyAsync(string city)
+        public virtual async Task<KeyValuePair<HttpStatusCode, string>> GetAstronomyAsync(string city)
         {
             ValidateInputs(city, Constants.Constants.ASTRONOMY_ENDPOINT, out string? url);
 

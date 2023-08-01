@@ -29,7 +29,7 @@ namespace WeatherService.Api.Business.UnitTests.Factories
 
 
         [Fact]
-        public async Task Create_ApiVersionIs2_ReturnsWeatherStrategyWithAstronomy()
+        public void Create_ApiVersionIs2_ReturnsWeatherStrategyWithAstronomy()
         {
             //Arrange
             var weatherApiService = new Mock<IWeatherApiService>();
@@ -44,7 +44,7 @@ namespace WeatherService.Api.Business.UnitTests.Factories
 
 
         [Fact]
-        public async Task Create_ApiVersionIs0_ReturnsBaseWeatherStrategy()
+        public void Create_ApiVersionIs0_ReturnsBaseWeatherStrategy()
         {
             //Arrange
             var weatherApiService = new Mock<IWeatherApiService>();
