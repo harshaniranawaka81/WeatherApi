@@ -26,7 +26,7 @@ namespace WeatherService.Api.Business.Strategies
 
             if (weather.Key != HttpStatusCode.OK) return weather;
 
-            var astronomy = await _weatherApiService.GetAstonomyAsync(city);
+            var astronomy = await _weatherApiService.GetAstronomyAsync(city);
 
             if (astronomy.Key != HttpStatusCode.OK) return astronomy;
 
